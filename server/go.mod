@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.3.0
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/coreos/go-oidc/v3 v3.11.0
+	github.com/drasi-project/temporal-drasi/contracts/watch v0.0.0
 	github.com/gomarkdown/markdown v0.0.0-20260411013819-759bbc3e3207
 	github.com/gorilla/securecookie v1.1.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.30.0
@@ -15,11 +16,15 @@ require (
 	go.temporal.io/api v1.64.0
 	golang.org/x/net v0.60.0
 	golang.org/x/oauth2 v0.36.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260803160001-6ac0973c030d
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/validator.v2 v2.0.0-20210331031555-b37d688a7fb0
 	gopkg.in/yaml.v3 v3.0.1
 )
+
+replace github.com/drasi-project/temporal-drasi/contracts/watch => ../vendor/watch-contract
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
@@ -46,6 +51,4 @@ require (
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260803160001-6ac0973c030d // indirect
 )

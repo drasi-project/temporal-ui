@@ -3,6 +3,10 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutData, LayoutLoad } from './$types';
 
 import { fetchCluster, fetchSystemInfo } from '$lib/services/cluster-service';
+import {
+  createDrasiClient,
+  fetchDrasiCapabilities,
+} from '$lib/services/drasi-service';
 import { fetchNamespaces } from '$lib/services/namespaces-service';
 import {
   fetchSettings,
@@ -19,6 +23,7 @@ import '../../app.css';
 export const load: LayoutLoad = async function ({
   fetch,
   url,
+  params,
 }): Promise<LayoutData> {
   const settings: Settings = await fetchSettings(fetch);
 
@@ -43,11 +48,23 @@ export const load: LayoutLoad = async function ({
     settings,
     fetch,
   );
+  const [drasi, drasiPlugins] = await Promise.all([
+    params.namespace
+      ? fetchDrasiCapabilities(() =>
+          createDrasiClient(params.namespace, fetch).capabilities(),
+        )
+      : Promise.resolve({ kind: 'unsupported' as const }),
+    fetchDrasiCapabilities(() =>
+      createDrasiClient(undefined, fetch).pluginCapabilities(),
+    ),
+  ]);
 
   return {
     user,
     settings,
     cluster,
     systemInfo,
+    drasi,
+    drasiPlugins,
   };
 };

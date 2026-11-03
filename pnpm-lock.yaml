@@ -90,6 +90,9 @@ importers:
       '@codemirror/view':
         specifier: ^6.38.2
         version: 6.43.4
+      '@drasi-project/temporal-watch-contracts':
+        specifier: file:vendor/watch-contract.tgz
+        version: file:vendor/watch-contract.tgz
       '@hyperjump/json-schema':
         specifier: ^1.17.8
         version: 1.17.8(@hyperjump/browser@1.5.0)
@@ -805,6 +808,10 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       postcss-selector-parser: ^7.1.1
+
+  '@drasi-project/temporal-watch-contracts@file:vendor/watch-contract.tgz':
+    resolution: {integrity: sha512-g+pGC4lucpmPnbJ8N2ysFwBZIp7xPB67WuecdgqOOG3rkbvdZgU3OOihl3VchYekqTAj7f0eDM7fk9AOjmxARg==, tarball: file:vendor/watch-contract.tgz}
+    version: 0.1.0
 
   '@emnapi/core@1.11.0':
     resolution: {integrity: sha512-l9Oo58x0HOP5znGzVhYW9U3e5wVuA4LAZU2AGezTmkhO1CgQRFDhDg4nneHsu/t3WniXg9QrG2nIXL/ZS8ln8Q==}
@@ -8113,6 +8120,8 @@ snapshots:
   '@csstools/selector-specificity@6.0.0(postcss-selector-parser@7.1.4)':
     dependencies:
       postcss-selector-parser: 7.1.4
+
+  '@drasi-project/temporal-watch-contracts@file:vendor/watch-contract.tgz': {}
 
   '@emnapi/core@1.11.0':
     dependencies:

@@ -160,8 +160,7 @@ func CreateGRPCConnection(cfgProvider *config.ConfigProviderWithRefresh) (*grpc.
 		return nil, fmt.Errorf("Unable to read TLS configs: %w", err)
 	}
 
-	conn := rpc.CreateGRPCConnection(cfg.TemporalGRPCAddress, tls)
-	return conn, nil
+	return rpc.Dial(cfg.TemporalGRPCAddress, tls, grpc.WithChainUnaryInterceptor(validateDrasiRequest))
 }
 
 func customUIResponse(customUI config.CustomUI) *CustomUIResponse {
