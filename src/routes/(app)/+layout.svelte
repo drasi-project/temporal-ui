@@ -36,6 +36,7 @@
     IconTemporalWorker,
     IconTemporalWorkflow,
   } from '$lib/io/icon';
+  import { methodAllowed } from '$lib/services/drasi-service';
   import { authUser, logout as logoutAuthUser } from '$lib/stores/auth-user';
   import { inProgressBatchOperation } from '$lib/stores/batch-operations';
   import {
@@ -65,6 +66,12 @@
     routeForWorkerDeployments,
     routeForWorkers,
     routeForWorkflows,
+  } from '$lib/utilities/route-for';
+  import {
+    routeForDrasiPlugins,
+    routeForDrasiQueries,
+    routeForDrasiSources,
+    routeForDrasiWatches,
   } from '$lib/utilities/route-for';
   import { minimumVersionRequired } from '$lib/utilities/version-check';
 
@@ -177,6 +184,7 @@
         label: translate('common.namespaces'),
         isActive: (path) =>
           path.includes(namespacesRoute) &&
+          !path.includes('/drasi/') &&
           !path.includes(workflowsRoute) &&
           !path.includes(agentsRoute) &&
           !path.includes(schedulesRoute) &&
@@ -302,9 +310,53 @@
   };
 
   let routes = $derived(getRoutes(activeNamespaceName));
-  let linkList = $derived(
-    getNavPrimaryLinks(routes, !!$inProgressBatchOperation),
+  const drasiCapabilities = $derived(
+    page.data.drasi?.kind === 'ready' ? page.data.drasi.value : undefined,
   );
+  const pluginCapabilities = $derived(
+    page.data.drasiPlugins?.kind === 'ready'
+      ? page.data.drasiPlugins.value
+      : undefined,
+  );
+  let linkList = $derived([
+    ...getNavPrimaryLinks(routes, !!$inProgressBatchOperation),
+    {
+      href: routeForDrasiSources({ namespace: activeNamespaceName }),
+      Icon: IconTemporalNamespaces,
+      label: translate('drasi.sources'),
+      testId: 'drasi-sources-button',
+      hidden: !methodAllowed(drasiCapabilities, 'WatchService', 'ListSources'),
+      isActive: (path: string) => path.includes('/drasi/sources'),
+    },
+    {
+      href: routeForDrasiQueries({ namespace: activeNamespaceName }),
+      Icon: IconTemporalWorkflow,
+      label: translate('drasi.queries'),
+      testId: 'drasi-queries-button',
+      hidden: !methodAllowed(drasiCapabilities, 'WatchService', 'ListQueries'),
+      isActive: (path: string) => path.includes('/drasi/queries'),
+    },
+    {
+      href: routeForDrasiWatches({ namespace: activeNamespaceName }),
+      Icon: IconTemporalSchedules,
+      label: translate('drasi.watches'),
+      testId: 'drasi-watches-button',
+      hidden: !methodAllowed(drasiCapabilities, 'WatchService', 'ListWatches'),
+      isActive: (path: string) => path.includes('/drasi/watches'),
+    },
+    {
+      href: routeForDrasiPlugins(),
+      Icon: IconTemporalWorker,
+      label: translate('drasi.plugins'),
+      testId: 'drasi-plugins-button',
+      hidden: !methodAllowed(
+        pluginCapabilities,
+        'PluginService',
+        'ListPlugins',
+      ),
+      isActive: (path: string) => path.includes('/drasi/plugins'),
+    },
+  ]);
   let linkListForSecondGroup = $derived(
     getNavSecondaryLinks(routes, !!$inProgressBatchOperation),
   );
@@ -332,11 +384,26 @@
       standaloneActivitiesRoute,
       standaloneNexusOperationsRoute,
       catalogRoute,
+      routeForDrasiSources({ namespace: activeNamespaceName }),
+      routeForDrasiQueries({ namespace: activeNamespaceName }),
+      routeForDrasiWatches({ namespace: activeNamespaceName }),
     ].some((route) => page.url.href.includes(route)),
   );
 
   function getCurrentHref(namespace: string) {
     const namespacePages = [
+      {
+        subPath: 'drasi/sources',
+        fullRoute: routeForDrasiSources({ namespace }),
+      },
+      {
+        subPath: 'drasi/queries',
+        fullRoute: routeForDrasiQueries({ namespace }),
+      },
+      {
+        subPath: 'drasi/watches',
+        fullRoute: routeForDrasiWatches({ namespace }),
+      },
       {
         subPath: 'agents',
         fullRoute: routeForAgents({ namespace }),

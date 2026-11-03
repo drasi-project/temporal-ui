@@ -103,6 +103,24 @@ export const routeForNexus = (): ResolvedPathname => {
   return withPrefix('/nexus', {});
 };
 
+export const routeForDrasiSources = ({
+  namespace,
+}: NamespaceParameter): ResolvedPathname =>
+  withPrefix('/namespaces/[namespace]/drasi/sources', { namespace });
+
+export const routeForDrasiQueries = ({
+  namespace,
+}: NamespaceParameter): ResolvedPathname =>
+  withPrefix('/namespaces/[namespace]/drasi/queries', { namespace });
+
+export const routeForDrasiWatches = ({
+  namespace,
+}: NamespaceParameter): ResolvedPathname =>
+  withPrefix('/namespaces/[namespace]/drasi/watches', { namespace });
+
+export const routeForDrasiPlugins = (): ResolvedPathname =>
+  withPrefix('/drasi/plugins', {});
+
 export const routeForCatalog = ({
   namespace,
 }: NamespaceParameter): ResolvedPathname => {

@@ -1,5 +1,9 @@
 # Temporal UI
 
+The fork's native Sources, Queries, Watches, and trusted Plugin management pages
+are described in [Drasi UI](docs/drasi-ui.md). They require the Temporal Drasi
+server fork and this repository's Go gateway, not the stock Temporal CLI server.
+
 ## Prerequisites
 
 Temporal must be running in development.

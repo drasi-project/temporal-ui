@@ -61,7 +61,7 @@ func CreateGRPCConnection(hostName string, tls *tls.Config) *grpc.ClientConn {
 // The hostName syntax is defined in
 // https://github.com/grpc/grpc/blob/master/doc/naming.md.
 // e.g. to use dns resolver, a "dns:///" prefix should be applied to the target.
-func Dial(hostName string, tlsConfig *tls.Config) (*grpc.ClientConn, error) {
+func Dial(hostName string, tlsConfig *tls.Config, options ...grpc.DialOption) (*grpc.ClientConn, error) {
 	// Default to insecure
 	grpcSecureOpt := grpc.WithInsecure()
 	if tlsConfig != nil {
@@ -82,7 +82,7 @@ func Dial(hostName string, tlsConfig *tls.Config) (*grpc.ClientConn, error) {
 	mb := 1024 * 1024
 	maxPayloadSize := 64 * mb
 
-	return grpc.Dial(hostName,
+	return grpc.Dial(hostName, append([]grpc.DialOption{
 		grpcSecureOpt,
 		grpc.WithChainUnaryInterceptor(
 			errorInterceptor),
@@ -90,7 +90,7 @@ func Dial(hostName string, tlsConfig *tls.Config) (*grpc.ClientConn, error) {
 		grpc.WithDisableServiceConfig(),
 		grpc.WithConnectParams(cp),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxPayloadSize)),
-	)
+	}, options...)...)
 }
 
 func errorInterceptor(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {

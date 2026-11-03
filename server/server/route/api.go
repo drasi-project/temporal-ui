@@ -70,6 +70,11 @@ func SetAPIRoutes(e *echo.Echo, cfgProvider *config.ConfigProviderWithRefresh, a
 		return fmt.Errorf("Failed to create gRPC connection to Temporal server: %w", err)
 	}
 
+	if err := api.RegisterDrasiRoutes(e, cfgProvider, apiMiddleware, conn); err != nil {
+		_ = conn.Close()
+		return fmt.Errorf("failed to register Drasi API routes: %w", err)
+	}
+
 	route := e.Group("/api/v1")
 	route.GET("/settings", api.GetSettings(cfgProvider))
 	route.GET("/releases", api.GetLatestReleases(cfgProvider, api.NewReleaseChecker()))

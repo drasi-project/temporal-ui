@@ -105,7 +105,9 @@ func NewServer(opts ...server_options.ServerOption) *Server {
 
 	e.Pre(route.PublicPath(cfg.PublicPath))
 	route.SetHealthRoute(e)
-	route.SetAPIRoutes(e, cfgProvider, serverOpts.APIMiddleware)
+	if err := route.SetAPIRoutes(e, cfgProvider, serverOpts.APIMiddleware); err != nil {
+		panic(err)
+	}
 	route.SetAuthRoutes(e, cfgProvider)
 	if cfg.EnableUI {
 		var assets fs.FS
